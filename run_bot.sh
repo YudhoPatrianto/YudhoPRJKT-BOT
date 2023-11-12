@@ -15,7 +15,7 @@ ENV_CPU=$(bash $PWD/env/info/cpu_model.sh)
 ENV_TOTAL=$(bash $PWD/env/info/total_core_info.sh) 
 ENV_UPTIME=$(bash $PWD/env/info/uptime_info.sh) 
 ENV_MEMORY=$(bash $PWD/env/info/memory_info.sh) 
-ENV_DISK=$(bash $PWD/env/info/disk_info.sh)
+ENV_DISK=$(bash $PWD/env/info/disk_info.sh) 
 ENV_CPU_USAGE=$(bash $PWD/env/info/cpu_usage.sh) 
 ENV_ISP=$(bash $PWD/env/info/isp_info.sh) 
 
@@ -28,20 +28,25 @@ ENV_LINES=$(bash $PWD/env/lines/lines.sh)
 curl -s -X POST $URL_MSG > /dev/null 2>&1 \
     -d chat_id=$CHAT_ID \
     -d "text=\`$ENV_HEADER\`%0A \
-\`$ENV_OS\`%0A \
+\`$ENV_CPU\` %0A \
+\`$ENV_CPU_USAGE\`%0A \
 \`$ENV_KERNEL%0A\` \
+\`$ENV_OS\`%0A \
 \`$ENV_USERS\`%0A \
 \`$ENV_MEMORY\` %0A \
 \`$ENV_DISK\` %0A \
-\`$ENV_CPU\` %0A \
 \`$ENV_TOTAL\`%0A \
-\`$ENV_CPU_USAGE\`%0A \
+\`$ENV_UPTIME\`%0A\
 \`$ENV_ISP\` \
-\`$ENV_UPTIME\` \
 \`$ENV_LINES\`%0A%0A"\
     -d "parse_mode=Markdown"
 
-# ==================================================================================================================
+
+
+# =================================================================================================================
+# Put Your FILE Location In Here
+FILE_CHECK=$(pwd)/file/platform-tools_r34.0.5-windows.zip
+
 # Send Files
 function send_file() {
 FILE_DIR=$(echo file/)$(ls file/*.sh | grep -v '*.sh' | cut -d'/' -f2)
@@ -53,7 +58,7 @@ curl -X POST > /dev/null 2>&1 -F "chat_id=$CHAT_ID" -F "document=@$FILE_DIR" $UR
 # Send Notify Upload
 curl -s -X POST $URL_MSG > /dev/null 2>&1 \
     -d chat_id=$CHAT_ID \
-    -d "text=\`⌛️Uploading Files\`" \
+    -d "text=\`📤⌛️Uploading Files\`" \
     -d "parse_mode=Markdown"
 
 sleep 5s
@@ -70,6 +75,8 @@ curl -s -X POST $URL_MSG > /dev/null 2>&1 \
     -d chat_id=$CHAT_ID \
     -d "text=\`✅Done Uploading Files At: $(calculated)\`" \
     -d "parse_mode=Markdown"
+
+
 
 
 
