@@ -37,14 +37,12 @@ curl -s -X POST $URL_MSG > /dev/null 2>&1 \
 \`$ENV_LINES\`%0A%0A"\
     -d "parse_mode=Markdown"
 
-# =================================================================================================================
-# Put Your FILE Location In Here
-FILE_CHECK=$(pwd)/file/uptime.sh
-
+# ==================================================================================================================
 # Send Files
 function send_file() {
+FILE_DIR=$(echo file/)$(ls file/*.sh | grep -v '*.sh' | cut -d'/' -f2)
 URL_FILES=https://api.telegram.org/bot$TOKEN/sendDocument
-curl -X POST > /dev/null 2>&1 -F "chat_id=$CHAT_ID" -F "document=@$FILE_CHECK" $URL_FILES
+curl -X POST > /dev/null 2>&1 -F "chat_id=$CHAT_ID" -F "document=@$FILE_DIR" $URL_FILES
 }
 
 
