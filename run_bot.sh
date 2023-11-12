@@ -17,7 +17,7 @@ ENV_UPTIME=$(bash $PWD/env/info/uptime_info.sh)
 ENV_MEMORY=$(bash $PWD/env/info/memory_info.sh) 
 ENV_DISK=$(bash $PWD/env/info/disk_info.sh)
 ENV_CPU_USAGE=$(bash $PWD/env/info/cpu_usage.sh) 
- 
+ENV_ISP=$(bash $PWD/env/info/isp_info.sh) 
 
 # Lines And Header
 ENV_HEADER=$(bash $PWD/env/header/header.sh) 
@@ -36,6 +36,7 @@ curl -s -X POST $URL_MSG > /dev/null 2>&1 \
 \`$ENV_CPU\` %0A \
 \`$ENV_TOTAL\`%0A \
 \`$ENV_CPU_USAGE\`%0A \
+\`$ENV_ISP\` \
 \`$ENV_UPTIME\` \
 \`$ENV_LINES\`%0A%0A"\
     -d "parse_mode=Markdown"
