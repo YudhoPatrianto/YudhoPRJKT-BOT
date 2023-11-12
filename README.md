@@ -4,6 +4,12 @@ The Telegram Bot To Send Files And Notify
 
 #### Usage 
 
+## Clonned First The Repo And Go To Directory
+---------------
+```bash
+git clone https://github.com/YudhoPatrianto/YudhoPRJKT-BOT && cd YudhoPRJKT-BOT
+```
+
 ## Input Your Auth Bot Token And Chat ID First
 ---------------
 ```bash
