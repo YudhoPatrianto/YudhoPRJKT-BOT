@@ -48,7 +48,7 @@ curl -s -X POST $URL_MSG > /dev/null 2>&1 \
 FILE_CHECK=$(pwd)/file/platform-tools_r34.0.5-windows.zip
 
 # Send Files
-function send_file() {
+send_file() {
 FILE_DIR=$(echo file/)$(ls file/*.sh | grep -v '*.sh' | cut -d'/' -f2)
 URL_FILES=https://api.telegram.org/bot$TOKEN/sendDocument
 curl -X POST > /dev/null 2>&1 -F "chat_id=$CHAT_ID" -F "document=@$FILE_DIR" $URL_FILES
@@ -63,7 +63,7 @@ curl -s -X POST $URL_MSG > /dev/null 2>&1 \
 
 sleep 5s
 
-function calculated() {
+calculated() {
 SECONDS=0
 send_file
 echo "$((SECONDS/3600))h $(((SECONDS/60)%60))m $((SECONDS%60))s"
