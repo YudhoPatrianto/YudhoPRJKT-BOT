@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
+# Insert Your Public IP 
+IP=
 
-echo 🌐ISP Name: $(whois 117.20.48.16 | grep -E "netname|descr" | awk -F': ' '{print $2}' | head -n 1)
+echo 🌐ISP Name: $(whois $IP | grep -E "NetName|netname|descr" | awk -F': ' '{print $2}' | head -n 1)
