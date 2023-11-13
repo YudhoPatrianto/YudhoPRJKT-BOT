@@ -44,9 +44,6 @@ curl -s -X POST $URL_MSG > /dev/null 2>&1 \
 
 
 # =================================================================================================================
-# Put Your FILE Location In Here
-FILE_CHECK=$(pwd)/file/platform-tools_r34.0.5-windows.zip
-
 # Send Files
 send_file() {
 FILE_DIR=$(echo file/)$(ls file/*.sh | grep -v '*.sh' | cut -d'/' -f2)
