@@ -83,16 +83,27 @@ send_file
 echo "$((SECONDS/3600))h $(((SECONDS/60)%60))m $((SECONDS%60))s"
 }
 
+# Send Notify When Failed Upload
+send_failed_notify_upload() {
+curl -s -X POST $URL_MSG > /dev/null 2>&1 \
+    -d chat_id=$CHAT_ID \
+    -d "text=\`❌Failed to Upload File, File Does Not Exist\`" \
+    -d "parse_mode=Markdown"
+}
+
+
 sleep 1s
 # Send Notify When Completed
+upload_success() {
 curl -s -X POST $URL_MSG > /dev/null 2>&1 \
     -d chat_id=$CHAT_ID \
     -d "text=\`✅Done Uploading Files At: $(calculated)\`" \
     -d "parse_mode=Markdown"
+}
 
-
-
-
-
-
-
+check_file=$(ls -l $PWD/file/*.exe 2>&1 | grep "No such file or directory" | cut -d' ' -f5-)
+if [ "$check_file" ]; then
+send_failed_notify_upload
+else
+upload_success
+fi
