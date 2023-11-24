@@ -27,7 +27,7 @@ ENV_LINES=$(bash $PWD/env/lines/lines.sh)
 # Send Search IP
 curl -s -X POST $URL_MSG > /dev/null 2>&1 \
     -d chat_id=$CHAT_ID \
-    -d "text=\`$(echo 🔎Searching Your Public IP)\`%0A" \
+    -d "text=\`$(echo 🔎Searching Your Public IP)$ENV_SEARCH_IP\`%0A" \
     -d parse_mode=Markdown
 
 sleep 5s
