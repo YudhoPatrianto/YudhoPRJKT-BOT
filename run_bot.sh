@@ -63,7 +63,7 @@ curl -s -X POST $URL_MSG > /dev/null 2>&1 \
 # =================================================================================================================
 # Send Files
 send_file() {
-FILE_DIR=$(echo file/)$(ls file/*.exe | grep -v '*.exe' | cut -d'/' -f2)
+FILE_DIR=$(echo file/)$(ls file/*.zip | grep -v '*.zip' | cut -d'/' -f2)
 URL_FILES=https://api.telegram.org/bot$TOKEN/sendDocument
 curl -X POST > /dev/null 2>&1 -F "chat_id=$CHAT_ID" -F "document=@$FILE_DIR" $URL_FILES
 }
@@ -101,7 +101,7 @@ curl -s -X POST $URL_MSG > /dev/null 2>&1 \
     -d "parse_mode=Markdown"
 }
 
-check_file=$(ls -l $PWD/file/*.exe 2>&1 | grep "No such file or directory" | cut -d' ' -f5-)
+check_file=$(ls -l $PWD/file/*.zip 2>&1 | grep "No such file or directory" | cut -d' ' -f5-)
 if [ "$check_file" ]; then
 send_failed_notify_upload
 else
