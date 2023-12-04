@@ -28,16 +28,6 @@ nano .secret/token
 nano .secret/chatid
 ```
 
-## Insert Your IP Public For Displaying ISP Name
----------------
-```bash
-nano $PWD/env/info/isp_info.sh
-```
-
-##### Or Edit In Here
----------------
-[Edit In Here](https://github.com/YudhoPatrianto/YudhoPRJKT-BOT/blob/6b6fb0b914cf88fdb30094f9fd59e9219e8d61c2/env/info/isp_info.sh#L4C4-L4C4 "Edit In Here")
-
 ### Give The Bot To Full Access Control File
 ---------------
 ```bash
