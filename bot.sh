@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# Load Config
+source $HOME/YudhoPRJKT-BOT/.secret/bot.config
+
+# Load Environment BOT
+export TOKEN=${TOKEN}
+export ENDPOINT=${ENDPOINT}
+export last_id=${LAST_ID}
+
+# Clearing Log
+function ClearLog() {
+    search_latest_log=$(curl -s -X GET "${ENDPOINT}/getUpdates" | jq '.result | max_by(.update_id) | .update_id')
+    if [[ ${search_latest_log} != *"null"* ]]; then
+    curl -s -X GET "${ENDPOINT}/getUpdates" \
+    -d "offset=$(($search_latest_log + 1))" \
+    > /dev/null
+    fi
+}
+
+# Main Bot
+function RunBOT() {
+    function GetUpdates() {
+        curl -s "${ENDPOINT}/getUpdates?offset=$((last_id+1))" | jq -r '.result[-1]'
+    }
+
+    function sendMessage() { # Usage For Sending Message: sendMessage ${chat_id} "Input Your Text" "HTML/Markdown" ${reply_chat}
+        local chat_id=$1
+        local text=$2
+        local StylingText=$3
+        local reply_to_message_id=$4
+
+        curl -s -X POST "${ENDPOINT}/sendMessage" \
+        -d "chat_id=$chat_id" \
+        -d "text=$text" \
+        -d "reply_to_message_id=$reply_to_message_id" \
+        -d parse_mode=$StylingText \
+        > /dev/null
+    }
+
+    # Let's Get Start Bot
+    while true; do
+    export goUpdate=$(GetUpdates)
+    if [[ ! -z "${goUpdate}" ]]; then
+    # Take All Information Needed
+    last_id=$(echo "${goUpdate}" | jq '.update_id')
+    # Command Handler
+    export CommandHandler=$(echo "${goUpdate}" | jq -r '.message.text')
+    
+    # User Info
+    first_name=$(echo "${goUpdate}" | jq -r '.message.from.first_name')
+    last_name=$(echo "${goUpdate}" | jq -r '.message.from.last_name')
+    export user_id=$(echo "${goUpdate}" | jq -r '.message.from.id')
+    export username=$(echo "${goUpdate}" | jq -r '.message.from.username')
+    export chat_id=$(echo "${goUpdate}" | jq -r '.message.chat.id')
+    
+    # Reply Chat
+    export reply_chat=$(echo "${goUpdate}" | jq '.message.message_id')
+    fi
+
+    # Command Handler
+    if [[ ${CommandHandler} == *"/start"* ]]; then
+    sendMessage ${chat_id} "<b>Hallo👋</b>%0A<b>First Name:</b> <code>${first_name}</code>%0A<b>First Name:</b> <code>${last_name}</code>%0A<b>Username:</b> @${username}%0A<b>User ID:</b> <code>${user_id}</code>%0A%0A<b>Kamu Dapat Melihat Semua Command Di</b> /help" "HTML" ${reply_chat}
+
+    elif [[ ${CommandHandler} == *"/help"* ]]; then
+    sendMessage ${chat_id} "<b>Still On Development</b>%0ADevelopment By: @YudhoPatrianto" "HTML" ${reply_chat}
+    fi
+
+
+    sleep 0.1
+done
+}
+
+# Running Bot
+ClearLog # Clear Log
+sleep 2s
+RunBOT
