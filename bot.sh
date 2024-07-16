@@ -83,6 +83,28 @@ function RunBOT() {
     }
 
 
+    function unpinChatMessage() { # Unpin Message
+        GetChatForUnpins=$(curl -s -X POST "${ENDPOINT}/getUpdates" | jq -r '.result[-1].message')
+        if [[ ${GetChatForUnpins} == *"reply_to_message"* ]]; then
+    
+        # Unpin A Message
+        local chat_id_unpin=$(curl -s -X POST "${ENDPOINT}/getUpdates" | jq -r '.result[-1].message.chat.id')
+        local message_id_unpin=$(curl -s -X POST "${ENDPOINT}/getUpdates" | jq -r '.result[-1].message.reply_to_message.message_id')
+    
+        curl -s -X POST "${ENDPOINT}/unpinChatMessage" \
+        -d chat_id=${chat_id_unpin} \
+        -d message_id=${message_id_unpin} \
+        > /dev/null
+
+        # Send Notification Unpin
+        sendMessage ${chat_id} "📌<b>Pesan Telah Saya Unpin</b>" "HTML" ${reply_chat}
+    
+        else
+        SearchUsernameRequestUnpin=$(curl -s -X POST "${ENDPOINT}/getUpdates" | jq -r '.result[-1].message.from.username')
+        sendMessage ${chat_id} "<b>Maaf</b> @${SearchUsernameRequestUnpin} <b>Saya Tidak Dapat Melakukan Unpin Pesan, Coba Lah Membalas/Reply Target Pesan Yang Ingin Anda Unpin...</b>" "HTML" ${reply_chat}
+        fi
+    }
+
     # Let's Get Start Bot
     while true; do
     export goUpdate=$(GetUpdates)
@@ -112,6 +134,9 @@ function RunBOT() {
 
     elif [[ ${CommandHandler} == *"/pin"* ]]; then
     pinChatMessage
+
+    elif [[ ${CommandHandler} == *"/unpin"* ]]; then
+    unpinChatMessage
 
     fi
 
