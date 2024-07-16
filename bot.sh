@@ -59,6 +59,30 @@ function RunBOT() {
         > /dev/null 
     }
 
+    function pinChatMessage() { # Pin  Message
+        GetChatForPins=$(curl -s -X POST "${ENDPOINT}/getUpdates" | jq -r '.result[-1].message')
+        if [[ ${GetChatForPins} == *"reply_to_message"* ]]; then
+    
+        # Pin A Message
+        local chat_id_pin=$(curl -s -X POST "${ENDPOINT}/getUpdates" | jq -r '.result[-1].message.chat.id')
+        local message_id_pin=$(curl -s -X POST "${ENDPOINT}/getUpdates" | jq -r '.result[-1].message.reply_to_message.message_id')
+    
+        curl -s -X POST "${ENDPOINT}/pinChatMessage" \
+        -d chat_id=${chat_id_pin} \
+        -d message_id=${message_id_pin} \
+        -d disable_notification=False \
+        > /dev/null
+
+        # Send Notification Pin
+        sendMessage ${chat_id} "📍<b>Pesan Telah Saya Pin</b>" "HTML" ${reply_chat}
+
+        else
+        SearchUsernameRequestPin=$(curl -s -X POST "${ENDPOINT}/getUpdates" | jq -r '.result[-1].message.from.username')
+        sendMessage ${chat_id} "<b>Maaf</b> @${SearchUsernameRequestPin} <b>Saya Tidak Dapat Melakukan Pin Pesan, Coba Lah Membalas/Reply Target Pesan Yang Ingin Anda Pin...</b>" "HTML" ${reply_chat}
+        fi
+    }
+
+
     # Let's Get Start Bot
     while true; do
     export goUpdate=$(GetUpdates)
@@ -85,6 +109,10 @@ function RunBOT() {
 
     elif [[ ${CommandHandler} == *"/help"* ]]; then
     sendMessage ${chat_id} "<b>Still On Development</b>%0ADevelopment By: @YudhoPatrianto" "HTML" ${reply_chat}
+
+    elif [[ ${CommandHandler} == *"/pin"* ]]; then
+    pinChatMessage
+
     fi
 
 
