@@ -38,6 +38,27 @@ function RunBOT() {
         > /dev/null
     }
 
+    function sendVideo() { # Usage For Sending Video: sendVideo ${chat_id} "Input Your Text/Caption" "HTML/Markdown" ${reply_chat}
+        local chat_id=$1
+        local caption=$2
+        local StyledCaption=$3
+        local reply_to_message_id=$4
+        local GetVideoPath=$(echo $(echo $(pwd)/*.mp4))
+
+        curl -s -X POST "${ENDPOINT}/sendVideo" \
+        -F chat_id="${chat_id}" \
+        -F video=@"${GetVideoPath}" \
+        -F disable_notification=False \
+        -F protect_content=False \
+        -F supports_streaming=True \
+        -F show_caption_above_media=True \
+        -F caption="${caption}" \
+        -F parse_mode="${StyledCaption}" \
+        -F has_spoiler=False \
+        -F reply_to_message_id="$reply_to_message_id" \
+        > /dev/null 
+    }
+
     # Let's Get Start Bot
     while true; do
     export goUpdate=$(GetUpdates)
