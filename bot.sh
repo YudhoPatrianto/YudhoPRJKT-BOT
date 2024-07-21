@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load Config
-source $HOME/YudhoPRJKT-BOT/.secret/bot.config
+source $(pwd)/.secret/bot.config
 
 # Load Environment BOT
 export TOKEN=${TOKEN}
