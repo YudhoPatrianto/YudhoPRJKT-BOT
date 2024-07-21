@@ -105,6 +105,25 @@ function RunBOT() {
         fi
     }
 
+    function BashSnippet() {
+        local UserText=$(curl -s -X POST "${ENDPOINT}/getUpdates" | jq -r '.result[-1]')
+        local BashInput=$(echo "${UserText}" | jq -r '.message.text')
+        local GetUserRequest=$(echo "${UserText}" | jq -r '.message.from.username')
+        local InputBash=$(echo "${BashInput}" | sed 's/!bash //')
+        local StartCalculate=$(date +%s)
+        local OutputBash=$(eval "${InputBash}" 2>&1)
+        local OutputBash=$(eval "${InputBash}" 2>&1 | sed 's/bot.sh: line [0-9]*: //')
+        local EndCalculate=$(date +%s)
+        local ShowTime=$(( EndCalculate - StartCalculate ))
+        local DisplayMinutes=$(( ShowTime / 60 ))
+        local DisplaySeconds=$(( ShowTime % 60 ))
+        if [[ ${OutputBash} == *"bot.sh"* ]]; then
+        sendMessage ${chat_id} "<b>⚙️🔽Bash Input:</b>%0A<pre>${InputBash}</pre>%0A%0A<b>⚙️🔼Bash Output:</b>%0A<pre>${OutputBash}</pre>%0A%0A<b>🕐Execution Time:</b> ${DisplayMinutes}m ${DisplaySeconds}s%0A%0A<b>Requested Command By</b> @${GetUserRequest}" "HTML" ${reply_chat}
+        else
+        sendMessage ${chat_id} "<b>⚙️🔽Bash Input:</b>%0A<pre>${InputBash}</pre>%0A%0A<b>⚙️🔼Bash Output:</b>%0A<pre>${OutputBash}</pre>%0A%0A<b>🕐Execution Time:</b> ${DisplayMinutes}m ${DisplaySeconds}s%0A%0A<b>Requested Command By</b> @${GetUserRequest}" "HTML" ${reply_chat}
+        fi
+    }
+
     # Let's Get Start Bot
     while true; do
     export goUpdate=$(GetUpdates)
@@ -137,6 +156,9 @@ function RunBOT() {
 
     elif [[ ${CommandHandler} == *"/unpin"* ]]; then
     unpinChatMessage
+
+    elif [[ ${CommandHandler} == *"!bash"* ]]; then
+    BashSnippet
 
     fi
 
